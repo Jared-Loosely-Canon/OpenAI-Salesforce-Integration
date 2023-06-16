@@ -1,0 +1,40 @@
+<!--
+  @description       : 
+  @author            : Jared Simpson
+  @group             : Loosely Canon LLC
+  @last modified on  : 06-16-2023
+  @last modified by  : Jared Simpson
+-->
+<template>
+    <lightning-card title="OpenAI Chat">
+        <div class="slds-p-around_small">
+            <lightning-combobox name="chatSelector" label="Select a chat" options={chats} value={chatId} onchange={handleChatChange}></lightning-combobox>
+        </div>
+        <div class="slds-p-around_small">
+            <lightning-button label="New Chat" onclick={handleNewChat} class="slds-m-top_medium"></lightning-button>
+        </div>
+        <div if:true={chatResponse} class="slds-p-around_medium">
+            <template for:each={chatResponse} for:item="message">
+                <div key={message.id} class="slds-p-around_medium">
+                    <template if:true={message.Input_Message__c}>
+                        <div class="slds-text-heading_small">You</div>
+                        <div class="slds-text-body_regular">{message.Input_Message__c}</div>
+                    </template>
+                    <template if:true={message.Output_Message__c}>
+                        <div class="slds-text-heading_small">OpenAI</div>
+                        <div class="slds-text-body_regular">{message.Output_Message__c}</div>
+                    </template>
+                </div>
+            </template>
+        </div>
+        <template if:true={isLoading}>
+            <div class="slds-is-relative slds-m-around_medium">
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </div>
+        </template>
+        <div class="slds-p-around_medium">
+            <lightning-textarea name="inputBox" label="Enter your text" value={userInput} onchange={handleInputChange}></lightning-textarea>
+            <lightning-button label="Submit" onclick={handleSubmit} class="slds-m-top_medium"></lightning-button>
+        </div>
+    </lightning-card>
+</template>
