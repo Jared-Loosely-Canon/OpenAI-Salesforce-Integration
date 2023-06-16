@@ -2,11 +2,18 @@
   "packageDirectories": [
     {
       "path": "force-app",
-      "default": true
+      "package": "oai_sf_i",
+      "versionName": "ver 0.1",
+      "versionNumber": "0.1.0.NEXT",
+      "default": false,
+      "versionDescription": "A integration between Salesforce and OpenAI"
     }
   ],
   "name": "OpenAI-Salesforce-Integration",
-  "namespace": "",
+  "namespace": "oai_sf_i",
   "sfdcLoginUrl": "https://login.salesforce.com",
-  "sourceApiVersion": "57.0"
+  "sourceApiVersion": "57.0",
+  "packageAliases": {
+    "oai_sf_i": "0HoDn0000008OURKA2"
+  }
 }
