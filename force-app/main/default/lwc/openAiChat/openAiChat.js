@@ -1,4 +1,4 @@
-import { LightningElement } from 'lwc';
+import { LightningElement, api } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { subscribe, onError, } from 'lightning/empApi';
 import Id from '@salesforce/user/Id';
@@ -10,6 +10,8 @@ import createNewChat from '@salesforce/apex/OpenAiChatController.createNewChat';
 import getExistingMessages from '@salesforce/apex/OpenAiChatController.getExistingMessages';
 
 export default class OpenAiChat extends LightningElement {
+    @api channelName = '/event/oai_sf_i__OpenAI_Event__e';
+    subscription = {};
     userId = Id;
 
     userInput = '';
@@ -19,7 +21,50 @@ export default class OpenAiChat extends LightningElement {
     isLoading = false;
 
     connectedCallback() {
+        this.registerErrorListener();
+        this.subscribeToChannel();
         this.initializeChats();
+    }
+    subscribeToChannel() {
+        const thisReference = this;
+
+        const messageCallback = function (response) {
+            console.log('New message received: ', response.data);
+            if(response.data.payload.oai_sf_i__User_Id__c === thisReference.userId){
+                this.chatId = response.data.payload.oai_sf_i__Chat_Id__c;
+                getExistingMessages({ chatId: this.chatId })
+                    .then(result => {
+                        var messages = JSON.parse(result);
+                        this.chatResponse = messages;
+                    })
+                    .catch(error => {
+                        console.log('Callback error: ', error);
+                        this.dispatchEvent(
+                            new ShowToastEvent({
+                                title: 'Error',
+                                message: error,
+                                variant: 'error'
+                            })
+                        );
+                    })
+            }
+        };
+
+        subscribe(this.channelName, -1, messageCallback).then((response) => {
+            this.subscription = response;
+        });
+    }
+
+    registerErrorListener() {
+        onError((error) => {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Error',
+                    message: JSON.stringify(error),
+                    variant: 'error'
+                })
+            );
+        });
     }
 
     initializeChats() {
@@ -52,6 +97,7 @@ export default class OpenAiChat extends LightningElement {
                 this.chatResponse = messages;
             })
             .catch(error => {
+                console.log('handleChatChange error: ', error);
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: 'Error',
@@ -72,6 +118,8 @@ export default class OpenAiChat extends LightningElement {
                 this.userInput = '';
             })
             .catch(error => {
+                console.log('handleNewChat error: ', error);
+
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: 'Error',
@@ -92,6 +140,8 @@ export default class OpenAiChat extends LightningElement {
                 this.isLoading = false;
             })
             .catch(error => {
+                console.log('handleSubmit error: ', error);
+
                 this.chatResponse = error;
                 this.isLoading = false; 
                 this.dispatchEvent(
