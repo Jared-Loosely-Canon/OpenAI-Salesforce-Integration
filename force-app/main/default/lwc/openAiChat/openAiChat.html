@@ -2,10 +2,11 @@
   @description       : 
   @author            : Jared Simpson
   @group             : Loosely Canon LLC
-  @last modified on  : 06-16-2023
+  @last modified on  : 06-17-2023
   @last modified by  : Jared Simpson
 -->
 <template>
+    <!--  -->
     <lightning-card title="OpenAI Chat">
         <div class="slds-p-around_small">
             <lightning-combobox name="chatSelector" label="Select a chat" options={chats} value={chatId} onchange={handleChatChange}></lightning-combobox>
@@ -15,14 +16,14 @@
         </div>
         <div if:true={chatResponse} class="slds-p-around_medium">
             <template for:each={chatResponse} for:item="message">
-                <div key={message.id} class="slds-p-around_medium">
-                    <template if:true={message.Input_Message__c}>
+                <div key={message.oai_sf_i__id} class="slds-p-around_medium">
+                    <template if:true={message.oai_sf_i__Input_Message__c}>
                         <div class="slds-text-heading_small">You</div>
-                        <div class="slds-text-body_regular">{message.Input_Message__c}</div>
+                        <div class="slds-text-body_regular">{message.oai_sf_i__Input_Message__c}</div>
                     </template>
-                    <template if:true={message.Output_Message__c}>
+                    <template if:true={message.oai_sf_i__Output_Message__c}>
                         <div class="slds-text-heading_small">OpenAI</div>
-                        <div class="slds-text-body_regular">{message.Output_Message__c}</div>
+                        <div class="slds-text-body_regular">{message.oai_sf_i__Output_Message__c}</div>
                     </template>
                 </div>
             </template>
