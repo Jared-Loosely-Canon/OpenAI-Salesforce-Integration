@@ -32,3 +32,16 @@ https://youtu.be/_-cdPqOJaEw
 ## Contribute to the Project
 
 The first version is very basic, but there are a lot of possibilities.
+
+## Getting Help
+
+### Email
+support@looselycanon.com
+jaredsimpson@looselycanon.com
+
+### LinkedIn
+https://www.linkedin.com/in/jaredsimpson-looselycanon/
+https://www.linkedin.com/company/loosely-canon-llc/
+
+### Website
+https://looselycanon.com/
