@@ -8,7 +8,7 @@
         <label>Information</label>
         <layoutColumns>
             <layoutItems>
-                <behavior>Required</behavior>
+                <behavior>ReadOnly</behavior>
                 <field>Name</field>
             </layoutItems>
         </layoutColumns>
