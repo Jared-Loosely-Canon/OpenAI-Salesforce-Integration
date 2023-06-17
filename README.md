@@ -17,6 +17,9 @@ For Sandboxes: https://test.salesforce.com/packaging/installPackage.apexp?p0=04t
 
 ## Configuration Steps
 
+These steps are covered indepth on our blog
+https://looselycanon.com/salesforce-chatgpt
+
 1. Create a Named Credential with your OpenAI api key
 2. Assign the OpenAI Chat Admin or OpenAI Chat User permission set to users
 3. Add the OpenAiChat LWC to you apps, record pages, app pages, and/or homepages
