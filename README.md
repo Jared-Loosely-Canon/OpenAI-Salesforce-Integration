@@ -11,7 +11,9 @@ However, you still must abide by any governance policies that your company emplo
 
 There are two methods to install, the package installation or a direct deployment. 
 
-Package install: 
+Package install 
+For Production: https://login.salesforce.com/packaging/installPackage.apexp?p0=04tDn000000aEGTIA2
+For Sandboxes: https://test.salesforce.com/packaging/installPackage.apexp?p0=04tDn000000aEGTIA2
 
 ## Configuration Steps
 
