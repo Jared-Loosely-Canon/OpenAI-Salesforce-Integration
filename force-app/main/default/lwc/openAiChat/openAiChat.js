@@ -22,8 +22,8 @@ export default class OpenAiChat extends LightningElement {
 
     connectedCallback() {
         this.registerErrorListener();
-        this.subscribeToChannel();
-        this.initializeChats();
+        // this.subscribeToChannel();
+        // this.initializeChats();
     }
     subscribeToChannel() {
         const thisReference = this;
@@ -31,15 +31,17 @@ export default class OpenAiChat extends LightningElement {
         const messageCallback = function (response) {
             console.log('New message received: ', response.data);
             if(response.data.payload.oai_sf_i__User_Id__c === thisReference.userId){
-                this.chatId = response.data.payload.oai_sf_i__Chat_Id__c;
-                getExistingMessages({ chatId: this.chatId })
+                thisReference.chatId = response.data.payload.oai_sf_i__Chat_Id__c;
+                getExistingMessages({ chatId: response.data.payload.oai_sf_i__Chat_Id__c })
                     .then(result => {
                         var messages = JSON.parse(result);
-                        this.chatResponse = messages;
+                        thisReference.chatResponse = messages;
+                        thisReference.loading = false;
+                        thisReference.userInput = '';
                     })
                     .catch(error => {
                         console.log('Callback error: ', error);
-                        this.dispatchEvent(
+                        thisReference.dispatchEvent(
                             new ShowToastEvent({
                                 title: 'Error',
                                 message: error,
