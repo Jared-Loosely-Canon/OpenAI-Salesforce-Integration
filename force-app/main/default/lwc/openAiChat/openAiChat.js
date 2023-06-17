@@ -21,10 +21,11 @@ export default class OpenAiChat extends LightningElement {
     isLoading = false;
 
     connectedCallback() {
-        this.registerErrorListener();
+        // this.registerErrorListener();
         // this.subscribeToChannel();
-        // this.initializeChats();
+        this.initializeChats();
     }
+    // 
     subscribeToChannel() {
         const thisReference = this;
 
@@ -40,7 +41,6 @@ export default class OpenAiChat extends LightningElement {
                         thisReference.userInput = '';
                     })
                     .catch(error => {
-                        console.log('Callback error: ', error);
                         thisReference.dispatchEvent(
                             new ShowToastEvent({
                                 title: 'Error',
@@ -99,7 +99,6 @@ export default class OpenAiChat extends LightningElement {
                 this.chatResponse = messages;
             })
             .catch(error => {
-                console.log('handleChatChange error: ', error);
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: 'Error',
@@ -120,8 +119,6 @@ export default class OpenAiChat extends LightningElement {
                 this.userInput = '';
             })
             .catch(error => {
-                console.log('handleNewChat error: ', error);
-
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: 'Error',
@@ -142,8 +139,6 @@ export default class OpenAiChat extends LightningElement {
                 this.isLoading = false;
             })
             .catch(error => {
-                console.log('handleSubmit error: ', error);
-
                 this.chatResponse = error;
                 this.isLoading = false; 
                 this.dispatchEvent(
