@@ -3,7 +3,7 @@
  *                    : This class is used by the OpenAIChat Lightning Web Component.
  * @author            : Jared Simpson
  * @group             : Loosely Canon LLC
- * @last modified on  : 06-16-2023
+ * @last modified on  : 06-19-2023
  * @last modified by  : Jared Simpson
 **/
 public with sharing class OpenAiChatController {
@@ -18,9 +18,41 @@ public with sharing class OpenAiChatController {
     **/
     @AuraEnabled
     public static String chatWithOpenAI(String userInput, String chatId) {
+        try{
+            // chatWithOpenAiCallout(UserInfo.getUserId(), userInput, chatId);
+            // return 'Chat is running in the background.';
+            String result = chatHandler(userInput, chatId);
+            return result;
+        } catch (Exception e) {
+            chatWithOpenAiCallout(UserInfo.getUserId(), userInput, chatId);
+            return 'It is taking longer than expected to get a response from OpenAI. The chat will continue to run in the background.';
+        }
+        
+    }
+
+    @future(callout=true)
+    public static void chatWithOpenAiCallout(Id userId, String userInput, String chatId) {
+        // Create an instance of the platform event
+        OpenAI_Event__e event = new OpenAI_Event__e();
+        event.User_Id__c = userId;
+        event.Chat_Id__c = chatId;
+        event.Error__c = false;
+
+        try{
+            String response = chatHandler(userInput, chatId);
+            Database.SaveResult result = EventBus.publish(event);
+        } catch (Exception e) {
+            System.debug('Error on chatWithOpenAiCallout: ' + e.getMessage());
+            event.Error__c = true;
+            Database.SaveResult result = EventBus.publish(event);
+        }
+
+    }
+
+    private static String chatHandler(String userInput, String chatId){
         OpenAI_Chat_Message__c[] chatMessages = [SELECT Id, Input_Message__c, Output_Message__c 
             FROM OpenAI_Chat_Message__c WITH_SECURITY_ENFORCED WHERE OpenAI_Chat__c = :chatId ORDER BY CreatedDate ASC];
-        
+    
         if(chatMessages.size() > 0 && (!Utilities.checkCreateFieldLevelSecurity(chatMessages[0]) || !Utilities.checkUpdateFieldLevelSecurity(chatMessages[0]))) {
             return 'Error: You do not have access to the OpenAI Chat Messages.';
         }
@@ -52,6 +84,9 @@ public with sharing class OpenAiChatController {
         req.setEndpoint('callout:OpenAI_API/'+chatSetting.Endpoint__c);
         req.setMethod('POST');
         req.setBody(JSON.serialize(inputChatWrapper));
+        if(System.isFuture() || System.isBatch() || System.isQueueable()){
+            req.setTimeout(120000);
+        }
 
         HttpResponse res = new Http().send(req);
 
@@ -86,7 +121,7 @@ public with sharing class OpenAiChatController {
     * @author Jared Simpson | 06-16-2023 
     * @return List<OpenAI_Chat__c> 
     **/
-    @AuraEnabled
+    @AuraEnabled(cacheable=false)
     public static List<OpenAI_Chat__c> getLastChats() {
         // Retrieves the last 10 chats the current user created
         return [SELECT Id, Name FROM OpenAI_Chat__c WITH_SECURITY_ENFORCED WHERE CreatedBy.Id = :UserInfo.getUserId() ORDER BY CreatedDate DESC LIMIT 10];
@@ -97,7 +132,7 @@ public with sharing class OpenAiChatController {
     * @author Jared Simpson | 06-16-2023 
     * @return String 
     **/
-    @AuraEnabled
+    @AuraEnabled(cacheable=false)
     public static String createNewChat() {
         OpenAI_Chat__c newChat = new OpenAI_Chat__c(model__c=chatSetting.model__c);
         insert newChat;
@@ -110,7 +145,7 @@ public with sharing class OpenAiChatController {
     * @param chatId 
     * @return string 
     **/
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled(cacheable=false)
     public static string getExistingMessages(String chatId){
         try {
             OpenAI_Chat_Message__c[] chatMessages = [SELECT Id, Input_Message__c, Output_Message__c 
