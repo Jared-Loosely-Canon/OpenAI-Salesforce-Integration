@@ -21,23 +21,26 @@ export default class OpenAiChat extends LightningElement {
     isLoading = false;
 
     connectedCallback() {
-        // this.registerErrorListener();
-        // this.subscribeToChannel();
+        this.registerErrorListener();
+        this.subscribeToChannel();
         this.initializeChats();
     }
-    // 
+
     subscribeToChannel() {
         const thisReference = this;
 
         const messageCallback = function (response) {
-            console.log('New message received: ', response.data);
-            if(response.data.payload.oai_sf_i__User_Id__c === thisReference.userId){
-                thisReference.chatId = response.data.payload.oai_sf_i__Chat_Id__c;
+            thisReference.chatId = response.data.payload.oai_sf_i__Chat_Id__c;
+            if(response.data.payload.oai_sf_i__User_Id__c === thisReference.userId && response.data.payload.oai_sf_i__Error__c === true){
+                thisReference.chatResponse = 'An error occured. Please try again later.';
+                thisReference.loading = false;
+            }
+            if(response.data.payload.oai_sf_i__User_Id__c === thisReference.userId && response.data.payload.oai_sf_i__Error__c === false){
                 getExistingMessages({ chatId: response.data.payload.oai_sf_i__Chat_Id__c })
                     .then(result => {
                         var messages = JSON.parse(result);
                         thisReference.chatResponse = messages;
-                        thisReference.loading = false;
+                        thisReference.isLoading = false;
                         thisReference.userInput = '';
                     })
                     .catch(error => {
@@ -113,6 +116,16 @@ export default class OpenAiChat extends LightningElement {
     handleNewChat() {
         createNewChat()
             .then(result => {
+                if(result === 'Error: You do not have access to create a new OpenAI Chat.'){
+                    this.dispatchEvent(
+                        new ShowToastEvent({
+                            title: 'Error',
+                            message: result,
+                            variant: 'error'
+                        })
+                    );
+                    return;
+                }
                 this.chatId = result;
                 this.initializeChats();
                 this.chatResponse = '';
@@ -133,6 +146,16 @@ export default class OpenAiChat extends LightningElement {
         this.isLoading = true;
         chatWithOpenAI({ userInput: this.userInput, chatId: this.chatId })
             .then(result => {
+                if(result === 'Chat is running in the background.' || result === 'It is taking longer than expected to get a response from OpenAI. The chat will continue to run in the background.'){
+                    this.dispatchEvent(
+                        new ShowToastEvent({
+                            title: 'Info',
+                            message: result,
+                            variant: 'info'
+                        })
+                    );
+                    return;
+                }
                 var messages = JSON.parse(result);
                 this.chatResponse = messages;
                 this.userInput = '';

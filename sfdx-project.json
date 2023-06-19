@@ -3,8 +3,8 @@
     {
       "path": "force-app",
       "package": "oai_sf_i",
-      "versionName": "ver 1.1",
-      "versionNumber": "1.1.0.NEXT",
+      "versionName": "ver 1.2",
+      "versionNumber": "1.2.0.NEXT",
       "versionDescription": "A integration between Salesforce and OpenAI"
     }
   ],
@@ -16,6 +16,7 @@
     "oai_sf_i": "0HoDn0000008OURKA2",
     "oai_sf_i@1.0.0-1": "04tDn000000aEGTIA2",
     "oai_sf_i@1.0.0-2": "04tDn000000aEGYIA2",
-    "oai_sf_i@1.1.0-1": "04tDn000000aEGdIAM"
+    "oai_sf_i@1.1.0-1": "04tDn000000aEGdIAM",
+    "oai_sf_i@1.2.0-1": "04tDn000000aEH2IAM"
   }
 }
