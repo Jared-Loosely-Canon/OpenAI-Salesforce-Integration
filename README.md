@@ -17,6 +17,8 @@ For Sandboxes: https://test.salesforce.com/packaging/installPackage.apexp?p0=04t
 
 ## Configuration Steps
 
+Ensure you have enabled API usage billing in your OpenAI account! This will not work without it.
+
 These steps are covered indepth on our blog
 https://looselycanon.com/salesforce-chatgpt
 
