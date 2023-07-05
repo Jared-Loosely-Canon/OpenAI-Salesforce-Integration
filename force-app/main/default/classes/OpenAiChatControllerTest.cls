@@ -2,7 +2,7 @@
  * @description       : 
  * @author            : Jared Simpson
  * @group             : Loosely Canon LLC
- * @last modified on  : 06-19-2023
+ * @last modified on  : 07-05-2023
  * @last modified by  : Jared Simpson
 **/
 @isTest
@@ -116,5 +116,34 @@ private with sharing class OpenAiChatControllerTest {
                 System.assertEquals('No chat found with that Id', e.getMessage());
             }
         }
+    }
+
+    @isTest
+    private static void test_invokeChatWithOpenAI_success(){
+        Test.setMock(HttpCalloutMock.class, new MockOpenAiResponse());
+
+        User queriedUser = [SELECT Id FROM User 
+            WHERE Email = 'ldkas8@alsdtestyadmin.com' LIMIT 1];
+        OpenAI_Chat__c chat = [SELECT Id, OwnerId 
+                FROM OpenAI_Chat__c
+                WHERE OwnerId =: queriedUser.Id LIMIT 1];
+
+        Test.startTest();
+        System.runAs(queriedUser){
+            List<OpenAiChatController.ChatParams> paramsList = new List<OpenAiChatController.ChatParams>();
+            OpenAiChatController.ChatParams params = new OpenAiChatController.ChatParams();
+            params.userInput = 'Hello World';
+            params.chatId = chat.Id;
+            paramsList.add(params);
+
+            List<String> results = OpenAiChatController.invokeChatWithOpenAI(paramsList);
+            System.assertNotEquals(null, results);
+            System.assertEquals(1, results.size());
+            System.assertNotEquals('[]', results[0]);
+
+            OpenAI_Chat__c[] chats = OpenAiChatController.getLastChats();
+            System.assertEquals(1, chats.size());
+        }
+        Test.stopTest();
     }
 }

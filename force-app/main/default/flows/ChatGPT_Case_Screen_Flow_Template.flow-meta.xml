@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Send_to_ChatGPT</name>
+        <label>Send to ChatGPT</label>
+        <locationX>176</locationX>
+        <locationY>458</locationY>
+        <actionName>OpenAiChatController</actionName>
+        <actionType>apex</actionType>
+        <flowTransactionModel>Automatic</flowTransactionModel>
+        <inputParameters>
+            <name>chatId</name>
+            <value>
+                <elementReference>Create_a_Chat</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>userInput</name>
+            <value>
+                <elementReference>ChatQuestion</elementReference>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <apiVersion>58.0</apiVersion>
+    <environments>Default</environments>
+    <interviewLabel>ChatGPT Case Screen Flow Template {!$Flow.CurrentDateTime}</interviewLabel>
+    <isTemplate>true</isTemplate>
+    <label>ChatGPT Case Screen Flow Template</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>Flow</processType>
+    <recordCreates>
+        <name>Create_a_Chat</name>
+        <label>Create a Chat</label>
+        <locationX>176</locationX>
+        <locationY>350</locationY>
+        <connector>
+            <targetReference>Send_to_ChatGPT</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>Model__c</field>
+            <value>
+                <elementReference>Get_ChatGPT_Model.model__c</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>OwnerId</field>
+            <value>
+                <elementReference>$User.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <object>OpenAI_Chat__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <recordLookups>
+        <name>Get_ChatGPT_Model</name>
+        <label>Get ChatGPT Model</label>
+        <locationX>176</locationX>
+        <locationY>242</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Create_a_Chat</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>DeveloperName</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Chat_Completions_v1</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>OpenAI_Setting__mdt</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <screens>
+        <name>Case_Summary</name>
+        <label>Case Summary</label>
+        <locationX>176</locationX>
+        <locationY>134</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Get_ChatGPT_Model</targetReference>
+        </connector>
+        <fields>
+            <name>Summary_Message</name>
+            <fieldText>&lt;p&gt;When you click finish, this will submit your question and the Case Summary to chatgpt for analysis. &lt;/p&gt;</fieldText>
+            <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>Question_to_ChatGPT</name>
+            <fieldText>Question to ChatGPT</fieldText>
+            <fieldType>LargeTextArea</fieldType>
+            <isRequired>true</isRequired>
+        </fields>
+        <showFooter>true</showFooter>
+        <showHeader>true</showHeader>
+    </screens>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Case_Summary</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <name>ChatQuestion</name>
+        <isViewedAsPlainText>true</isViewedAsPlainText>
+        <text>I have a question about this case. Here is the case summary
+{!recordId.Description}
+
+Here is my Question
+{!Question_to_ChatGPT}</text>
+    </textTemplates>
+    <variables>
+        <name>recordId</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
+        <objectType>Case</objectType>
+    </variables>
+</Flow>
