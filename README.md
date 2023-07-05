@@ -12,10 +12,12 @@ However, you still must abide by any governance policies that your company emplo
 There are two methods to install, the package installation or a direct deployment. 
 
 Package install 
-For Production: https://login.salesforce.com/packaging/installPackage.apexp?p0=04tDn000000aEH2IAM
-For Sandboxes: https://test.salesforce.com/packaging/installPackage.apexp?p0=04tDn000000aEH2IAM
+For Production: https://login.salesforce.com/packaging/installPackage.apexp?p0=04tDn000000aEQ0IAM
+For Sandboxes: https://test.salesforce.com/packaging/installPackage.apexp?p0=04tDn000000aEQ0IAM
 
 ## Configuration Steps
+
+Ensure you have enabled API usage billing in your OpenAI account! This will not work without it.
 
 These steps are covered indepth on our blog
 https://looselycanon.com/salesforce-chatgpt
