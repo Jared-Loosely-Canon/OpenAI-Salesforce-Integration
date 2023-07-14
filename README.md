@@ -7,6 +7,9 @@ There is no intermediary.
 
 However, you still must abide by any governance policies that your company employs.
 
+# Short Demo of the Chat in SF
+https://youtube.com/shorts/9Cy_-JkCQyo
+
 # Installation
 
 There are two methods to install, the package installation or a direct deployment. 
