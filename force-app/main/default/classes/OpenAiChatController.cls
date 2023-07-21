@@ -3,10 +3,10 @@
  *                    : This class is used by the OpenAIChat Lightning Web Component.
  * @author            : Jared Simpson
  * @group             : Loosely Canon LLC
- * @last modified on  : 07-05-2023
+ * @last modified on  : 07-21-2023
  * @last modified by  : Jared Simpson
 **/
-public with sharing class OpenAiChatController {
+global with sharing class OpenAiChatController {
     private static OpenAI_Setting__mdt chatSetting = OpenAI_Setting__mdt.getInstance('Chat_Completions_v1');
 
     /**
@@ -17,7 +17,7 @@ public with sharing class OpenAiChatController {
     * @return String 
     **/
     @AuraEnabled
-    public static String chatWithOpenAI(String userInput, String chatId) {
+    global static String chatWithOpenAI(String userInput, String chatId) {
         try{
             // chatWithOpenAiCallout(UserInfo.getUserId(), userInput, chatId);
             // return 'Chat is running in the background.';
@@ -33,19 +33,19 @@ public with sharing class OpenAiChatController {
     /**
     * @description Input parameter wrapper class for the invocable method.
     **/
-    public class ChatParams {
+    global class ChatParams {
         @InvocableVariable(label='User Input' required=true)
-        public String userInput;
+        global String userInput;
 
         @InvocableVariable(label='Chat Id' required=true)
-        public String chatId;
+        global String chatId;
     }
 
     /**
     * @description Invocable method for Salesforce flows to call the chatWithOpenAI method.
     **/
     @InvocableMethod(label='Chat with OpenAI')
-    public static List<String> invokeChatWithOpenAI(List<ChatParams> paramsList) {
+    global static List<String> invokeChatWithOpenAI(List<ChatParams> paramsList) {
         List<String> results = new List<String>();
 
         for (ChatParams params : paramsList) {
