@@ -2,11 +2,11 @@
  * @description       : 
  * @author            : Jared Simpson
  * @group             : Loosely Canon LLC
- * @last modified on  : 06-16-2023
+ * @last modified on  : 07-14-2023
  * @last modified by  : Jared Simpson
 **/
 @isTest
-private without sharing class TestDataHelperTest {
+private with sharing class TestDataHelperTest {
     @TestSetup
     private static void makeData(){
         User u = TestDataHelper.createSystemUser();

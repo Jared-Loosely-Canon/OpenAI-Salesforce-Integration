@@ -2,10 +2,10 @@
  * @description       : Helper class for test data creation
  * @author            : Jared Simpson
  * @group             : Loosely Canon LLC
- * @last modified on  : 06-16-2023
+ * @last modified on  : 07-14-2023
  * @last modified by  : Jared Simpson
 **/
-public without sharing class TestDataHelper {
+public with sharing class TestDataHelper {
     public static User createSystemUser(){
         Profile p = [SELECT Id FROM Profile WHERE Name = 'System Administrator'];
         PermissionSet ps = [SELECT Id, Name FROM PermissionSet WHERE Name='OpenAI_Admin_Access'];
