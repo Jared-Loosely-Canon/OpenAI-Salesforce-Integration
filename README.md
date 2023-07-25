@@ -15,8 +15,8 @@ https://youtube.com/shorts/9Cy_-JkCQyo
 There are two methods to install, the package installation or a direct deployment. 
 
 Package install 
-For Production: https://login.salesforce.com/packaging/installPackage.apexp?p0=04tDn000000aEQ0IAM
-For Sandboxes: https://test.salesforce.com/packaging/installPackage.apexp?p0=04tDn000000aEQ0IAM
+For Production: https://login.salesforce.com/packaging/installPackage.apexp?p0=04tDn000000aEZDIA2
+For Sandboxes: https://test.salesforce.com/packaging/installPackage.apexp?p0=04tDn000000aEZDIA2
 
 ## Configuration Steps
 
